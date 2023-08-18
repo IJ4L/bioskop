@@ -11,5 +11,7 @@ type Film struct {
 	Views     string  `json:"views" gorm:"varchar(20);not null"`
 	Pg        string  `json:"p-g" gorm:"varchar(20);not null"`
 	Price     string  `json:"price" gorm:"varchar(20);not null"`
+	ShowDate  string  `json:"show_date" gorm:"varchar(50);not null"`
+	ShowTimes string  `json:"show_times" gorm:"varchar(50);not null"`
 	Actors    []Actor `json:"actors" gorm:"many2many:film_actors;"`
 }

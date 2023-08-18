@@ -20,46 +20,34 @@ func DeserilizeUser(userRepository repository.UserRepository) gin.HandlerFunc {
 			token = fields[1]
 		}
 
-		unauthorized := response.ErorrResponse{
+		webResponse := response.ErorrResponse{
 			Code:   http.StatusUnauthorized,
 			Status: "Unauthorized",
 		}
 
-		forbiddenResponse := response.ErorrResponse{
-			Code:   http.StatusForbidden,
-			Status: "Forbidden",
-		}
-
 		if token == "" {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized)
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, webResponse)
 			ctx.Abort()
 			return
 		}
 
 		sub, err := utils.ValidateToken(token, "secret")
+
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized)
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, webResponse)
 			ctx.Abort()
 			return
 		}
 
-		subMap, ok := sub.(map[string]interface{})
-		if !ok {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized)
-			ctx.Abort()
-			return
+		result, err := userRepository.FindById(int(sub))
+
+		forbiddenResponse := response.ErorrResponse{
+			Code:   http.StatusUnauthorized,
+			Status: "Unauthorized",
 		}
 
-		id, ok := subMap["id"]
-		if !ok {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized)
-			ctx.Abort()
-			return
-		}
-
-		result, err := userRepository.FindById(int(id.(float64)))
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, forbiddenResponse)
+			ctx.AbortWithStatusJSON(http.StatusForbidden, forbiddenResponse)
 			ctx.Abort()
 			return
 		}

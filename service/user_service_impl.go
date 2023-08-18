@@ -17,8 +17,8 @@ type AuthenticationServiceImpl struct {
 	valdate        *validator.Validate
 }
 
-func NewAuthenticationService(userRepository repository.UserRepository, validate *validator.Validate) *AuthenticationServiceImpl {
-	return &AuthenticationServiceImpl{UserRepository: userRepository, valdate: validate}
+func NewAuthenticationService(userRepository repository.UserRepository, valdate *validator.Validate) *AuthenticationServiceImpl {
+	return &AuthenticationServiceImpl{UserRepository: userRepository, valdate: valdate}
 }
 
 func (s *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, error) {
@@ -33,7 +33,7 @@ func (s *AuthenticationServiceImpl) Login(user request.LoginRequest) (string, er
 		return "", errors.New("invalid username or password")
 	}
 
-	token, err_token := utils.GenerateToken(2*time.Hour, new_users, "secret")
+	token, err_token := utils.GenerateToken(2*time.Hour, new_users.Id, "secret")
 	helper.ErrorPanic(err_token)
 
 	return token, nil
