@@ -1,6 +1,7 @@
 package service
 
 import (
+	"cinema.com/data/request"
 	"cinema.com/data/response"
 	"cinema.com/model"
 )
@@ -8,4 +9,7 @@ import (
 type FilmService interface {
 	GetAllFilm() ([]model.Film, error)
 	GetSeat(id int) ([]response.SeatStatus, error)
+	AddFilm(film request.AddFilm) error
+	DeleteFilm(id uint) error
+	BookingFilm(booking request.BookingFilm) (request.BookingFilm, error)
 }

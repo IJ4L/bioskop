@@ -1,11 +1,13 @@
 package service
 
 import (
+	"errors"
+	"fmt"
+
+	"cinema.com/data/request"
 	"cinema.com/data/response"
 	"cinema.com/model"
 	"cinema.com/repository"
-	"errors"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -32,4 +34,52 @@ func (s *FilmServiceImpl) GetSeat(id int) ([]response.SeatStatus, error) {
 		return nil, fmt.Errorf("no seats found for film with ID %d", id)
 	}
 	return data, nil
+}
+
+func (s *FilmServiceImpl) AddFilm(film request.AddFilm) error {
+	err := s.validate.Struct(&film)
+	if err != nil {
+		return err
+	}
+
+	err = s.filmRepository.AddFilm(film)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *FilmServiceImpl) DeleteFilm(id uint) error {
+
+	err := s.filmRepository.FindById(id)
+	if err != nil {
+		return fmt.Errorf("film with ID %d not found", id)
+	}
+
+	err = s.filmRepository.DeleteFilm(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *FilmServiceImpl) BookingFilm(booking request.BookingFilm) (request.BookingFilm, error) {
+	err := s.validate.Struct(&booking)
+	if err != nil {
+		return booking, fmt.Errorf("booking film failed: %w", err)
+	}
+
+	err = s.filmRepository.FindById(booking.IdFilm)
+	if err != nil {
+		return booking, fmt.Errorf("film with ID %d not found", booking.IdFilm)
+	}
+
+	_, err = s.filmRepository.BookingFilm(booking)
+	if err != nil {
+		return booking, fmt.Errorf("booking film failed: %w", err)
+	}
+
+	return booking, nil
 }

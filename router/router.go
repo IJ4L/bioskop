@@ -30,6 +30,7 @@ func NewRouter(userRepository repository.UserRepository, authenticationControlle
 	usersRouter := router.Group("/films")
 	{
 		usersRouter.GET("", middleware.DeserilizeUser(userRepository), filmController.GetFilm)
+		usersRouter.POST("", middleware.DeserilizeUser(userRepository), filmController.CreateFilm)
 		usersRouter.GET("/seats", middleware.DeserilizeUser(userRepository), filmController.GetSeat)
 	}
 

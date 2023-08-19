@@ -35,7 +35,8 @@ func (repo *FilmRepositoryImpl) GetSeat(id int) []response.SeatStatus {
 }
 
 func (repo *FilmRepositoryImpl) AddFilm(film request.AddFilm) error {
-	db := repo.DB.Save(&film)
+
+	db := repo.DB.Table("films").Create(&film)
 	if db.Error != nil {
 		err := db.Error
 		return err
@@ -52,6 +53,19 @@ func (repo *FilmRepositoryImpl) DeleteFilm(id uint) error {
 	return nil
 }
 
-func (repo *FilmRepositoryImpl) BookingFilm(id uint, seat uint) error {
-	panic("")
+func (repo *FilmRepositoryImpl) BookingFilm(booking request.BookingFilm) (request.BookingFilm, error) {
+	db := repo.DB.Table("bookings")
+	result := db.Save(&booking)
+	if result.Error != nil {
+		return booking, result.Error
+	}
+	return booking, nil
+}
+
+func (repo *FilmRepositoryImpl) FindById(id uint) error {
+	db := repo.DB.First(&model.Film{}, id)
+	if db.Error != nil {
+		return db.Error
+	}
+	return nil
 }

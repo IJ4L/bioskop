@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"cinema.com/data/request"
 	"cinema.com/data/response"
 	"cinema.com/service"
+	"cinema.com/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -80,3 +82,76 @@ func (controller *FilmController) GetSeat(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, webResponse)
 }
+
+func (controller *FilmController) CreateFilm(ctx *gin.Context) {
+	// Upload the image (poster)
+	poster, err := utils.UploadImage(ctx)
+	if err != nil {
+		webResponse := response.ErorrResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+		}
+		ctx.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	// Retrieve the form data
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		webResponse := response.ErorrResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+		}
+		ctx.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	// Perform validation to ensure required fields are not empty
+	requiredFields := []string{"judul", "deskripsi", "genre", "imdb", "durations", "views", "p-g", "price", "show_date", "show_times"}
+	for _, field := range requiredFields {
+		if len(form.Value[field]) == 0 {
+			webResponse := response.ErorrResponse{
+				Code:   http.StatusBadRequest,
+				Status: "Bad Request",
+			}
+			ctx.JSON(http.StatusBadRequest, webResponse)
+			return
+		}
+	}
+
+	// Create the AddFilm struct using the form data
+	film := request.AddFilm{
+		Judul:     form.Value["judul"][0],
+		Desk:      form.Value["deskripsi"][0],
+		Genre:     form.Value["genre"][0],
+		Imdb:      form.Value["imdb"][0],
+		Poster:    poster,
+		Durations: form.Value["durations"][0],
+		Views:     form.Value["views"][0],
+		Pg:        form.Value["p-g"][0],
+		Price:     form.Value["price"][0],
+		ShowDate:  form.Value["show_date"][0],
+		ShowTimes: form.Value["show_times"][0],
+	}
+
+	// Add the film using the filmService
+	if err := controller.filmService.AddFilm(film); err != nil {
+		webResponse := response.ErorrResponse{
+			Code:   http.StatusBadRequest,
+			Status: "Bad Request",
+		}
+		ctx.JSON(http.StatusBadRequest, webResponse)
+		return
+	}
+
+	// Return a success response
+	webResponse := response.Response{
+		Code:    http.StatusOK,
+		Status:  "OK",
+		Message: "Success add film",
+		Data:    film,
+	}
+
+	ctx.JSON(http.StatusOK, webResponse)
+}
+

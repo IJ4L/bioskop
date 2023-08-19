@@ -11,5 +11,6 @@ type FilmRepository interface {
 	GetSeat(id int) []response.SeatStatus
 	AddFilm(film request.AddFilm) error
 	DeleteFilm(id uint) error
-	BookingFilm(id uint, seat uint) error
+	BookingFilm(booking request.BookingFilm) (request.BookingFilm, error)
+	FindById(id uint) error
 }
