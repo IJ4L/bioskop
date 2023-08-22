@@ -1,7 +1,7 @@
 # Travel Plan
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![License: MIT][license_badge]][license_link]
+[![License: GOOGLE][license_badge]][license_link]
 
 Cinema Ticekt is a backend service to manage ticketing, user can create and get list of all about cinema.
 
