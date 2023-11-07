@@ -7,6 +7,7 @@ import (
 	"cinema.com/config"
 	"cinema.com/controller"
 	"cinema.com/helper"
+	"cinema.com/model"
 	"cinema.com/repository"
 	"cinema.com/router"
 	"cinema.com/service"
@@ -20,7 +21,7 @@ func main() {
 	var ctx *gin.Context
 
 	
-	// db.AutoMigrate(&model.Film{}, &model.Actor{}, &model.Seat{}, &model.Booking{}, &model.User{}, &model.Bloc{}, &model.FilmActor{})
+	db.AutoMigrate(&model.Film{}, &model.Actor{}, &model.Seat{}, &model.Booking{}, &model.User{}, &model.Bloc{}, &model.FilmActor{})
 
 	userRepository := repository.NewUsersRepositoryImpl(db)
 	authenticationService := service.NewAuthenticationService(userRepository, validate)

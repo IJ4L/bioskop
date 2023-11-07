@@ -39,6 +39,7 @@ func NewRouter(userRepository repository.UserRepository, authenticationControlle
 	{
 		middelware := middleware.DeserilizeUser(userRepository)
 
+		
 		usersRouter.GET("", middelware, filmController.GetFilm)
 		usersRouter.POST("", middelware, filmController.CreateFilm)
 		usersRouter.DELETE("/remove", middelware, filmController.DeleteFilm)
