@@ -83,3 +83,48 @@ func (s *FilmServiceImpl) BookingFilm(booking request.BookingFilm) (request.Book
 
 	return booking, nil
 }
+
+// AddActor implements FilmService.
+func (s *FilmServiceImpl) AddActor(actor request.AddActor) error {
+	err := s.validate.Struct(&actor)
+	if err != nil {
+		return err
+	}
+
+	err = s.filmRepository.AddActor(actor)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ConnectActor implements FilmService.
+func (s *FilmServiceImpl) ConnectActor(connect request.ConnectActor) error {
+	err := s.validate.Struct(&connect)
+	if err != nil {
+		return err
+	}
+
+	err = s.filmRepository.ConnectActor(connect)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeleteActor implements FilmService.
+func (s *FilmServiceImpl) DeleteActor(id uint) error {
+	db := s.filmRepository.DeleteActor(id)
+	if db != nil {
+		return db
+	}
+
+	return nil
+}
+
+// GetActor implements FilmService.
+func (s *FilmServiceImpl) GetActor() []model.Actor {
+	return s.filmRepository.GetActor()
+}

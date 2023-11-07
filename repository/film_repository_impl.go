@@ -55,7 +55,7 @@ func (repo *FilmRepositoryImpl) DeleteFilm(id uint) error {
 
 func (repo *FilmRepositoryImpl) BookingFilm(booking request.BookingFilm) (request.BookingFilm, error) {
 	db := repo.DB.Table("bookings")
-	result := db.Save(&booking)
+	result := db.Create(&booking)
 	if result.Error != nil {
 		return booking, result.Error
 	}
@@ -63,9 +63,47 @@ func (repo *FilmRepositoryImpl) BookingFilm(booking request.BookingFilm) (reques
 }
 
 func (repo *FilmRepositoryImpl) FindById(id uint) error {
-	db := repo.DB.First(&model.Film{}, id)
+	var film model.Film
+	err := repo.DB.First(&film, id).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// AddActor implements FilmRepository.
+func (repo *FilmRepositoryImpl) AddActor(actor request.AddActor) error {
+	db := repo.DB.Table("actors").Create(&actor)
+	if db.Error != nil {
+		return db.Error
+	}
+
+	return nil
+}
+
+// ConnectActor implements FilmRepository.
+func (repo *FilmRepositoryImpl) ConnectActor(connect request.ConnectActor) error {
+	db := repo.DB.Table("film_actors").Create(&connect)
+
+	if db.Error != nil {
+		return db.Error
+	}
+
+	return nil
+}
+
+// DeleteActor implements FilmRepository.
+func (repo *FilmRepositoryImpl) DeleteActor(id uint) error {
+	db := repo.DB.Delete(&model.FilmActor{}, id)
 	if db.Error != nil {
 		return db.Error
 	}
 	return nil
+}
+
+// GetActor implements FilmRepository.
+func (repo *FilmRepositoryImpl) GetActor() []model.Actor {
+	actor := []model.Actor{}
+	repo.DB.Find(&actor)
+	return actor
 }

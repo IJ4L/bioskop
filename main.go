@@ -7,7 +7,6 @@ import (
 	"cinema.com/config"
 	"cinema.com/controller"
 	"cinema.com/helper"
-	"cinema.com/model"
 	"cinema.com/repository"
 	"cinema.com/router"
 	"cinema.com/service"
@@ -15,15 +14,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var (
-	ctx *gin.Context
-)
-
 func main() {
 	db := config.InitDatabase()
 	validate := validator.New()
+	var ctx *gin.Context
 
-	db.AutoMigrate(&model.Film{}, &model.Actor{}, &model.Seat{}, &model.Booking{}, &model.User{}, &model.Bloc{}, &model.FilmActor{})
+	
+	// db.AutoMigrate(&model.Film{}, &model.Actor{}, &model.Seat{}, &model.Booking{}, &model.User{}, &model.Bloc{}, &model.FilmActor{})
 
 	userRepository := repository.NewUsersRepositoryImpl(db)
 	authenticationService := service.NewAuthenticationService(userRepository, validate)
@@ -36,7 +33,7 @@ func main() {
 	routes := router.NewRouter(userRepository, authenticationController, filmController)
 
 	server := &http.Server{
-		Addr:           "localhost:3000",
+		Addr:           "localhost:8080",
 		Handler:        routes,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,

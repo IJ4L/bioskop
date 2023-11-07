@@ -1,6 +1,6 @@
 package model
 
 type FilmActor struct {
-	FilmID  uint `gorm:"primaryKey"`
-	ActorID uint `gorm:"primaryKey"`
+	FilmID  uint `json:"film_id" gorm:"primaryKey"`
+	ActorID uint `json:"actor_id" gorm:"primaryKey"`
 }

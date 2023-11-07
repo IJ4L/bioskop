@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"path/filepath"
 
 	"cinema.com/controller"
 	"cinema.com/middleware"
@@ -20,6 +21,13 @@ func NewRouter(userRepository repository.UserRepository, authenticationControlle
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
+	service.GET("/image/:filename", func(c *gin.Context) {
+		filename := c.Param("filename")
+		imagePath := filepath.Join("./uploads", filename)
+
+		c.File(imagePath)
+	})
+
 	router := service.Group("/api")
 	{
 		authenticationRouter := router.Group("/authentication")
@@ -29,9 +37,17 @@ func NewRouter(userRepository repository.UserRepository, authenticationControlle
 
 	usersRouter := router.Group("/films")
 	{
-		usersRouter.GET("", middleware.DeserilizeUser(userRepository), filmController.GetFilm)
-		usersRouter.POST("", middleware.DeserilizeUser(userRepository), filmController.CreateFilm)
-		usersRouter.GET("/seats", middleware.DeserilizeUser(userRepository), filmController.GetSeat)
+		middelware := middleware.DeserilizeUser(userRepository)
+
+		usersRouter.GET("", middelware, filmController.GetFilm)
+		usersRouter.POST("", middelware, filmController.CreateFilm)
+		usersRouter.DELETE("/remove", middelware, filmController.DeleteFilm)
+		usersRouter.GET("/seats", middelware, filmController.GetSeat)
+		usersRouter.POST("/booking", middelware, filmController.BookingFilm)
+		usersRouter.GET("actor", middelware, filmController.GetActor)
+		usersRouter.POST("actor", middelware, filmController.AddActor)
+		usersRouter.DELETE("/actor/delete", middelware, filmController.DeleteActor)
+		usersRouter.POST("/connect", middelware, filmController.ConnectActor)
 	}
 
 	return service

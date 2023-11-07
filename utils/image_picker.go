@@ -13,7 +13,7 @@ import (
 
 var uploadMutex sync.Mutex
 
-func UploadImage(c *gin.Context) (string, error) {
+func UploadImage(c *gin.Context, types string) (string, error) {
 	uploadDir := "./uploads"
 
 	err := os.MkdirAll(uploadDir, os.ModePerm)
@@ -26,7 +26,7 @@ func UploadImage(c *gin.Context) (string, error) {
 		return "", err
 	}
 
-	files := form.File["poster"]
+	files := form.File[types]
 	if len(files) == 0 {
 		return "", errors.New("no image file found")
 	}
@@ -44,7 +44,7 @@ func UploadImage(c *gin.Context) (string, error) {
 		return "", err
 	}
 
-	filename := "http://localhost:3000/uploads/" + fileName 
+	filename := "http://localhost:3000/image/" + fileName
 
 	return filename, nil
 }

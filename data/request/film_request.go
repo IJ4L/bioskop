@@ -15,9 +15,19 @@ type AddFilm struct {
 }
 
 type BookingFilm struct {
-	Id        uint `json:"id"`
 	IdPemesan uint `json:"id_pemesan"`
 	IdFilm    uint `json:"id_film"`
 	IdSeat    uint `json:"id_seat"`
 	IdBloc    uint `json:"id_bloc"`
+}
+
+type AddActor struct {
+	Name      string `json:"name"`
+	Profesion string `json:"profesion"`
+	Photo     string `json:"photo"`
+}
+
+type ConnectActor struct {
+	FilmID  uint `json:"film_id"`
+	ActorID uint `json:"actor_id"`
 }
