@@ -6,7 +6,7 @@ import (
 )
 
 func InitDatabase() *gorm.DB {
-	dsn := "root:Ijalganteng1@@tcp(103.175.219.55:3306)/cinema_ticket?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "your_database_user:your_database_password@tcp(192.168.61.197:6603)/your_database_name?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {

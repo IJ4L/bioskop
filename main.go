@@ -19,7 +19,6 @@ func main() {
 	db := config.InitDatabase()
 	validate := validator.New()
 	var ctx *gin.Context
-
 	
 	db.AutoMigrate(&model.Film{}, &model.Actor{}, &model.Seat{}, &model.Booking{}, &model.User{}, &model.Bloc{}, &model.FilmActor{})
 
@@ -34,7 +33,7 @@ func main() {
 	routes := router.NewRouter(userRepository, authenticationController, filmController)
 
 	server := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":1312",
 		Handler:        routes,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,

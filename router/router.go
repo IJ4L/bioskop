@@ -13,7 +13,7 @@ import (
 func NewRouter(userRepository repository.UserRepository, authenticationController *controller.AuthenticationController, filmController *controller.FilmController) *gin.Engine {
 	service := gin.Default()
 
-	service.GET("", func(context *gin.Context) {
+	service.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, "welcome home")
 	})
 
@@ -38,7 +38,6 @@ func NewRouter(userRepository repository.UserRepository, authenticationControlle
 	usersRouter := router.Group("/films")
 	{
 		middelware := middleware.DeserilizeUser(userRepository)
-
 		
 		usersRouter.GET("", middelware, filmController.GetFilm)
 		usersRouter.POST("", middelware, filmController.CreateFilm)
