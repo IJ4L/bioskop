@@ -1,11 +1,11 @@
 name: CI
 on:
   push:
-    branches: ["staging"]
+    branches: ["main"]
 
 jobs:
   build:
-    environment: staging
+    environment: main
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
